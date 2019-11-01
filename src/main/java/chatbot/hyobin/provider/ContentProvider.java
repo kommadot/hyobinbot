@@ -25,6 +25,7 @@ public class ContentProvider {
                 .cookie("LANGUAGE",language);
         Document doc = conn.get();
         String a[] = doc.toString().split("B형");
+        //System.out.println(a[0]);
         return a[0].contains(SEARCH_STRING);
     }
 
