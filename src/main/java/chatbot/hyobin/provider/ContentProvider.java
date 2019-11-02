@@ -18,7 +18,7 @@ public class ContentProvider {
     private String url;
 
     private static final String SEARCH_STRING = "신청중";
-    public boolean checkLeast() throws IOException {
+    public int checkLeast() throws IOException {
         Connection conn = Jsoup.connect(url)
                 .header("Content-Type", "application/json;charset=UTF-8")
                 .cookie("SESSION",session)
@@ -26,7 +26,15 @@ public class ContentProvider {
         Document doc = conn.get();
         String a[] = doc.toString().split("B형");
         //System.out.println(a[0]);
-        return a[0].contains(SEARCH_STRING);
+        if(!a[0].contains("인재개발원")){
+            return -1;
+        }
+        if(a[0].contains(SEARCH_STRING)){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 
 }
