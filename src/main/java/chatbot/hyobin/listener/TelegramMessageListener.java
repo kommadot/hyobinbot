@@ -53,6 +53,7 @@ public class TelegramMessageListener {
                                     }
                                     else if(result == -1){
                                         message.setText("연결 종료");
+                                        execute(message);
                                     }
                                     else if(i%10==0){
                                         message.setText("신청 탐색중");
