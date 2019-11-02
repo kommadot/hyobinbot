@@ -44,15 +44,15 @@ public class TelegramMessageListener {
                         if(stringMessage.contains("신청")){
                             message.setChatId(update.getMessage().getChatId());
                             for(int i=0;i<10000;i++){
-
                                 try {
                                     if(contentProvider.checkLeast()){
                                         message.setText("신청 쌉가능");
+                                        execute(message);
                                     }
-                                    else{
-                                        message.setText("신청 쌉불가능");
+                                    else if(i%10==0){
+                                        message.setText("신청 탐색중");
+                                        execute(message);
                                     }
-                                    execute(message);
                                     Thread.sleep(60000);
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
