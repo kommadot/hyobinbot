@@ -1,5 +1,6 @@
 package chatbot.hyobin.listener;
 
+import chatbot.hyobin.contentSelector.ContentSelector;
 import chatbot.hyobin.provider.ContentProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,8 +23,7 @@ public class TelegramMessageListener {
     @Value("${telegram.bot.key}")
     private String telegramBotKey;
     @Autowired
-    private ContentProvider contentProvider;
-
+    private ContentSelector contentSelector;
     @PostConstruct
     private void init(){
         ApiContextInitializer.init();
@@ -41,34 +41,12 @@ public class TelegramMessageListener {
                         String stringMessage = update.getMessage().getText();
                         SendMessage message = new SendMessage().enableHtml(true);
                         stringMessage = stringMessage.replace("/","");
-                        if(stringMessage.contains("신청")){
-                            message.setChatId(update.getMessage().getChatId());
-                            for(int i=0;i<10000;i++){
-
-                                try {
-                                    int result = contentProvider.checkLeast();
-                                    if(result==1){
-                                        message.setText("신청 쌉가능");
-                                        execute(message);
-                                    }
-                                    else if(result == -1){
-                                        message.setText("연결 종료");
-                                        execute(message);
-                                    }
-                                    else if(i%10==0){
-                                        message.setText("신청 탐색중");
-                                        execute(message);
-                                    }
-                                    Thread.sleep(60000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                } catch (TelegramApiException e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
+                        message.setChatId(update.getMessage().getChatId());
+                        message.setText(contentSelector.selectContent(stringMessage));
+                        try {
+                            execute(message);
+                        } catch (TelegramApiException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
