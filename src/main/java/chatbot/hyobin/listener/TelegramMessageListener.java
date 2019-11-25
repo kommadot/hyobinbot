@@ -1,7 +1,6 @@
 package chatbot.hyobin.listener;
 
 import chatbot.hyobin.contentSelector.ContentSelector;
-import chatbot.hyobin.provider.ContentProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -42,10 +41,14 @@ public class TelegramMessageListener {
                         SendMessage message = new SendMessage().enableHtml(true);
                         stringMessage = stringMessage.replace("/","");
                         message.setChatId(update.getMessage().getChatId());
-                        message.setText(contentSelector.selectContent(stringMessage));
+
                         try {
+                            message.setText(contentSelector.selectContent(stringMessage));
                             execute(message);
+
                         } catch (TelegramApiException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }

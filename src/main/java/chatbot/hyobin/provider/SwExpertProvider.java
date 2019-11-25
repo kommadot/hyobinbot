@@ -57,5 +57,4 @@ public class SwExpertProvider extends ContentProvider{
             return "쌉불가능";
         }
     }
-
 }
